@@ -44,10 +44,9 @@ public class SessionGUI extends javax.swing.JFrame {
         availableSession = new javax.swing.JScrollPane();
         jPanel2 = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
-        jLabel7 = new javax.swing.JLabel();
-        jLabel9 = new javax.swing.JLabel();
         jPanel4 = new javax.swing.JPanel();
-        jPanel5 = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTable1 = new javax.swing.JTable();
         makeRequest = new javax.swing.JButton();
         createSession = new javax.swing.JButton();
         addContact = new javax.swing.JButton();
@@ -101,22 +100,45 @@ public class SessionGUI extends javax.swing.JFrame {
         jPanel2.setLayout(new java.awt.BorderLayout());
 
         jPanel3.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel7.setText("Session id");
-        jPanel3.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 210, -1));
-
-        jLabel9.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel9.setText("Host username");
-        jPanel3.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(214, 0, 100, -1));
-
         jPanel2.add(jPanel3, java.awt.BorderLayout.PAGE_START);
 
         jPanel4.setLayout(new java.awt.GridLayout(1, 0));
         jPanel2.add(jPanel4, java.awt.BorderLayout.LINE_END);
 
-        jPanel5.setLayout(new java.awt.GridLayout(1, 0));
-        jPanel2.add(jPanel5, java.awt.BorderLayout.CENTER);
+        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Session ID", "Username"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Integer.class, java.lang.Long.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jTable1.setColumnSelectionAllowed(true);
+        jScrollPane1.setViewportView(jTable1);
+        jTable1.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        if (jTable1.getColumnModel().getColumnCount() > 0) {
+            jTable1.getColumnModel().getColumn(0).setMinWidth(120);
+            jTable1.getColumnModel().getColumn(0).setMaxWidth(150);
+            jTable1.getColumnModel().getColumn(1).setMinWidth(120);
+            jTable1.getColumnModel().getColumn(1).setMaxWidth(150);
+        }
+
+        jPanel2.add(jScrollPane1, java.awt.BorderLayout.CENTER);
 
         availableSession.setViewportView(jPanel2);
 
@@ -150,7 +172,7 @@ public class SessionGUI extends javax.swing.JFrame {
         getContentPane().add(changePassword, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 370, 160, 30));
 
         imageBackground.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Resources/background700400.jpg"))); // NOI18N
-        getContentPane().add(imageBackground, new org.netbeans.lib.awtextra.AbsoluteConstraints(-10, -6, 700, 500));
+        getContentPane().add(imageBackground, new org.netbeans.lib.awtextra.AbsoluteConstraints(-10, 0, 700, 500));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -190,13 +212,12 @@ public class SessionGUI extends javax.swing.JFrame {
     private javax.swing.JButton createSession;
     private javax.swing.JLabel image1;
     private javax.swing.JLabel imageBackground;
-    private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
-    private javax.swing.JPanel jPanel5;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTable jTable1;
     private javax.swing.JButton logOut;
     private javax.swing.JButton makeRequest;
     private javax.swing.JButton removeContact;

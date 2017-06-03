@@ -1,6 +1,5 @@
 package AppGameSetup;
 
-import Model.Player;
 import java.util.Scanner;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
