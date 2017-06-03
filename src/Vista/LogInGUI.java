@@ -4,7 +4,11 @@ import AppAccount.*;
 import Controller.ConnectionStatus;
 import Model.Account;
 import Model.User;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import org.json.simple.*;
+import org.json.simple.parser.ParseException;
 
 /**
  *
@@ -90,31 +94,24 @@ public class LogInGUI extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-    
+
     //TODO complite login method
     private void enterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_enterActionPerformed
 
-        ConnectionStatus status = AccountManager.loginAccount(username.getText(), String.valueOf(password.getPassword()));
-
-        if (null != status) switch (status) {
-            case SUCCESSFUL:
-                User u = new User();
-                u.status = "Online";
-                /*ESTO NO DEBERIA IR, ¿COMO ES EL JSON QUE DEVUELVE PARA EL LOGN? */
-                Account acc = new Account("dacanoc","123", "daca#gsf.com");                
-                u.account=acc;
-                /******************************************************************/
-                new SessionGUI(u).setVisible(true);
+        try {
+            JSONArray array = AccountManager.loginAccount(username.getText(), String.valueOf(password.getPassword()));
+            boolean status = (boolean)(((JSONObject) (array.get(0))).get("status"));
+            String message = (String)(((JSONObject) (array.get(0))).get("message"));
+            if (status){
+                new SessionGUI(username.getText()).setVisible(true);
                 this.setVisible(false);
-                break;
-            case INVALID_PARAMETERS:
-                JOptionPane.showMessageDialog(this, "The password and confirm password are diferent", "Message", JOptionPane.ERROR_MESSAGE);
-                break;
-            default:
-                JOptionPane.showMessageDialog(this, "Username or password incorrect", "Message", JOptionPane.ERROR_MESSAGE);
-                break;
-        }
+            }else{
+                JOptionPane.showMessageDialog(this, message, "Message", JOptionPane.INFORMATION_MESSAGE);
+            }
 
+        } catch (ParseException ex) {
+            Logger.getLogger(LogInGUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_enterActionPerformed
 
     private void goBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_goBackActionPerformed

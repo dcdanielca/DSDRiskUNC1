@@ -15,10 +15,10 @@ public class SessionGUI extends javax.swing.JFrame {
     ButtonGroup bg = new ButtonGroup();
     User user;
 
-    public SessionGUI(User user) {
+    public SessionGUI(String username) {
         initComponents();
         this.user = user;
-        title2Label.setText("Welcome " + user.account.username);
+        title2Label.setText("Welcome " + username);
         this.setVisible(true);
         this.setResizable(false);
         this.setLocationRelativeTo(null);

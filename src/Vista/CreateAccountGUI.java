@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import Controller.ConnectionStatus;
+import org.json.simple.parser.ParseException;
 
 /**
  *
@@ -113,22 +114,12 @@ public class CreateAccountGUI extends javax.swing.JFrame {
 
     private void confirmActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_confirmActionPerformed
 
-        ConnectionStatus status = AccountManager.createAccount(username.getText(), String.valueOf(password.getPassword()), String.valueOf(confirmPassword.getPassword()), email.getText());
-
-        if (null != status) switch (status) {
-            case SUCCESSFUL:
-                JOptionPane.showMessageDialog(this, "The user was created", "Message", JOptionPane.INFORMATION_MESSAGE);
-                break;
-            case FAILED:
-                JOptionPane.showMessageDialog(this, "That username is taken", "Message", JOptionPane.ERROR_MESSAGE);
-                break;
-            case INVALID_PARAMETERS:
-                JOptionPane.showMessageDialog(this, "The password and confirm password are diferent", "Message", JOptionPane.ERROR_MESSAGE);
-                break;
-            default:
-                JOptionPane.showMessageDialog(this, "There are problems with the connection", "Message", JOptionPane.ERROR_MESSAGE);
-                break;
-        }
+        try {
+            String message = AccountManager.createAccount(username.getText(), String.valueOf(password.getPassword()), String.valueOf(confirmPassword.getPassword()), email.getText());
+            JOptionPane.showMessageDialog(this, message, "Message", JOptionPane.INFORMATION_MESSAGE);
+        } catch (ParseException ex) {
+            Logger.getLogger(CreateAccountGUI.class.getName()).log(Level.SEVERE, null, ex);
+        }       
     }//GEN-LAST:event_confirmActionPerformed
 
     private void goBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_goBackActionPerformed
@@ -137,7 +128,7 @@ public class CreateAccountGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_goBackActionPerformed
 
     private void usernameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_usernameActionPerformed
-        
+
     }//GEN-LAST:event_usernameActionPerformed
 
     /**
