@@ -8,14 +8,14 @@ import Model.User;
  */
 public class DSDriskGame extends javax.swing.JFrame {
 
-    User user;
+    String username;
 
     /**
      * Creates new form DSDriskGame
      */
     public DSDriskGame() {
         initComponents();
-        user = new User();
+        this.username = username;
         this.setVisible(true);
         this.setResizable(false);
         this.setLocationRelativeTo(null);
@@ -91,13 +91,13 @@ public class DSDriskGame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void logInActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logInActionPerformed
-        LogInGUI login = new LogInGUI(user);
+        LogInGUI login = new LogInGUI(username);
         login.setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_logInActionPerformed
 
     private void createAccountActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createAccountActionPerformed
-        CreateAccountGUI c = new CreateAccountGUI(user);
+        CreateAccountGUI c = new CreateAccountGUI(username);
         c.setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_createAccountActionPerformed

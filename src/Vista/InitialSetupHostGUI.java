@@ -9,13 +9,12 @@ import Model.User;
  */
 public class InitialSetupHostGUI extends javax.swing.JFrame {
     
-    User user;
-    Player player;
+    String username;
     /**
      * Creates new form InitialSetupGUI
      */
-    public InitialSetupHostGUI(User user) {
-        this.user = user;
+    public InitialSetupHostGUI(String username) {
+        this.username = username;
        // player = new Player (this.user);
         initComponents();
         this.setVisible(true);
@@ -53,9 +52,10 @@ public class InitialSetupHostGUI extends javax.swing.JFrame {
         getContentPane().add(chooseMap, new org.netbeans.lib.awtextra.AbsoluteConstraints(373, 113, 130, -1));
 
         title2Label.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        title2Label.setForeground(new java.awt.Color(0, 0, 0));
         title2Label.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         title2Label.setText("Initial Setup");
-        getContentPane().add(title2Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(317, 73, 119, -1));
+        getContentPane().add(title2Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 70, 160, -1));
 
         title1Label.setFont(new java.awt.Font("AR DESTINE", 0, 48)); // NOI18N
         title1Label.setForeground(new java.awt.Color(255, 0, 0));
@@ -119,12 +119,12 @@ public class InitialSetupHostGUI extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void inviteContactActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inviteContactActionPerformed
-        new InviteContactGUI(this.user).setVisible(true);
+        new InviteContactGUI(this.username).setVisible(true);
     }//GEN-LAST:event_inviteContactActionPerformed
 
     private void deleteSessionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteSessionActionPerformed
         this.setVisible(false);
-        new SessionGUI(this.user).setVisible(true);
+        new SessionGUI(this.username).setVisible(true);
     }//GEN-LAST:event_deleteSessionActionPerformed
 
 

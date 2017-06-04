@@ -7,12 +7,12 @@ import Model.User;
  * @author GROUP 1 UNC
  */
 public class InviteContactGUI extends javax.swing.JFrame {
-    User user;
+    String username;
     /**
      * Creates new form InviteContactGUI
      */
-    public InviteContactGUI(User user) {
-        this.user = user;
+    public InviteContactGUI(String username) {
+        this.username = username;
         initComponents();
         this.setVisible(true);
         this.setResizable(false);

@@ -1,8 +1,13 @@
 package Vista;
 
-import Model.User;
+import AppGameSetup.SessionManager;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.*;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.ParseException;
 
 /**
  *
@@ -13,11 +18,11 @@ public class SessionGUI extends javax.swing.JFrame {
     private ArrayList<JRadioButton> radiobuttons = new ArrayList<>();
     private ArrayList<JRadioButton> labels = new ArrayList<>();
     ButtonGroup bg = new ButtonGroup();
-    User user;
+    String username;
 
     public SessionGUI(String username) {
         initComponents();
-        this.user = user;
+        this.username = username;
         title2Label.setText("Welcome " + username);
         this.setVisible(true);
         this.setResizable(false);
@@ -180,25 +185,36 @@ public class SessionGUI extends javax.swing.JFrame {
     private void logOutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logOutActionPerformed
 
         this.setVisible(false);
-        this.user.account = null;
-        new LogInGUI(this.user).setVisible(true);
+        this.username = null;
+        new LogInGUI(this.username).setVisible(true);
     }//GEN-LAST:event_logOutActionPerformed
 
     private void createSessionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createSessionActionPerformed
-        this.setVisible(false);
-        new InitialSetupHostGUI(this.user).setVisible(true);
+        try {
+            JSONArray array = SessionManager.createSession(this.username);
+            boolean status = (boolean) (((JSONObject) (array.get(0))).get("status"));
+            String message = (String) (((JSONObject) (array.get(0))).get("message"));
+            if (status) {
+                this.setVisible(false);
+                new InitialSetupHostGUI(this.username).setVisible(true);
+            } else {
+                JOptionPane.showMessageDialog(this, message, "Message", JOptionPane.INFORMATION_MESSAGE);
+            }
+        } catch (ParseException ex) {
+            Logger.getLogger(LogInGUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_createSessionActionPerformed
 
     private void addContactActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addContactActionPerformed
-        new AddContactGUI(this.user).setVisible(true);
+        new AddContactGUI(this.username).setVisible(true);
     }//GEN-LAST:event_addContactActionPerformed
 
     private void removeContactActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeContactActionPerformed
-        new DeleteContactGUI(this.user).setVisible(true);
+        new DeleteContactGUI(this.username).setVisible(true);
     }//GEN-LAST:event_removeContactActionPerformed
 
     private void changePasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_changePasswordActionPerformed
-        new ChangePasswordGUI(this.user).setVisible(true);
+        new ChangePasswordGUI(this.username).setVisible(true);
     }//GEN-LAST:event_changePasswordActionPerformed
 
     /**

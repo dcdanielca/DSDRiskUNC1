@@ -7,11 +7,12 @@ import Model.User;
  * @author GROUP 1 UNC
  */
 public class AddContactGUI extends javax.swing.JFrame {
-
+    String username;
     /**
      * Creates new form AddContactGUI
      */
-    public AddContactGUI(User user) {
+    public AddContactGUI(String username) {
+        this.username = username;
         initComponents();
         this.setVisible(true);
         this.setResizable(false);
@@ -29,7 +30,7 @@ public class AddContactGUI extends javax.swing.JFrame {
 
         image1 = new javax.swing.JLabel();
         titile1Label = new javax.swing.JLabel();
-        username = new javax.swing.JTextField();
+        usernameTextField = new javax.swing.JTextField();
         add = new javax.swing.JButton();
         goBack = new javax.swing.JButton();
         aboutLabel = new javax.swing.JLabel();
@@ -47,7 +48,13 @@ public class AddContactGUI extends javax.swing.JFrame {
         titile1Label.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         titile1Label.setText("DSDRisk Game");
         getContentPane().add(titile1Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 430, 60));
-        getContentPane().add(username, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 180, 250, 30));
+
+        usernameTextField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                usernameTextFieldActionPerformed(evt);
+            }
+        });
+        getContentPane().add(usernameTextField, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 180, 250, 30));
 
         add.setText("Add");
         add.addActionListener(new java.awt.event.ActionListener() {
@@ -84,6 +91,10 @@ public class AddContactGUI extends javax.swing.JFrame {
         this.setVisible(false);
     }//GEN-LAST:event_addActionPerformed
 
+    private void usernameTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_usernameTextFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_usernameTextFieldActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -95,6 +106,6 @@ public class AddContactGUI extends javax.swing.JFrame {
     private javax.swing.JLabel image1;
     private javax.swing.JLabel imageBackground;
     private javax.swing.JLabel titile1Label;
-    private javax.swing.JTextField username;
+    private javax.swing.JTextField usernameTextField;
     // End of variables declaration//GEN-END:variables
 }

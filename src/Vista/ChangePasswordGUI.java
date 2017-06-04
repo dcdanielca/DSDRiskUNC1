@@ -9,13 +9,13 @@ import javax.swing.JOptionPane;
  */
 public class ChangePasswordGUI extends javax.swing.JFrame {
 
-    User user;
+    String username;
 
     /**
      * Creates new form ChangePasswordGUI
      */
-    public ChangePasswordGUI(User user) {
-        this.user = user;
+    public ChangePasswordGUI(String username) {
+        this.username = username;
         initComponents();
         this.setVisible(true);
         this.setResizable(false);
@@ -102,12 +102,12 @@ public class ChangePasswordGUI extends javax.swing.JFrame {
     private void changeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_changeActionPerformed
         if (newPassword.getText().equals(confirmNewPassword.getText())) {
             if (newPassword.getText().length() >= 6 && newPassword.getText().length() <= 20) {
-                if (this.user.account.changePassword(this.user.account.username, oldPassword.getText(), newPassword.getText())) {
+                /*if (this.user.account.changePassword(this.user.account.username, oldPassword.getText(), newPassword.getText())) {
                     JOptionPane.showMessageDialog(this, "Your password has been successfully changed");
                     this.setVisible(false);
                 } else {
                     JOptionPane.showMessageDialog(this, "An error has occurred");
-                }
+                }*/
             } else {
                 JOptionPane.showMessageDialog(this, "Error: The password must not be less than 6 characters or more than 20 characters");
             }

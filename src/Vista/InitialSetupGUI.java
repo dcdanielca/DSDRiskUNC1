@@ -8,15 +8,12 @@ import Model.User;
  * @author GROUP 1 UNC
  */
 public class InitialSetupGUI extends javax.swing.JFrame {
-    
-    User user;
-    Player player;
+    String username;
     /**
      * Creates new form InitialSetupGUI
      */
-    public InitialSetupGUI(User user) {
-        this.user = user;
-       // player = new Player (this.user);
+    public InitialSetupGUI(String username) {
+        this.username = username;
         initComponents();
         this.setVisible(true);
         this.setResizable(false);
@@ -109,7 +106,7 @@ public class InitialSetupGUI extends javax.swing.JFrame {
 
     private void leaveSessionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_leaveSessionActionPerformed
         this.setVisible(false);
-        new SessionGUI(this.user).setVisible(true);
+        new SessionGUI(username).setVisible(true);
     }//GEN-LAST:event_leaveSessionActionPerformed
 
 

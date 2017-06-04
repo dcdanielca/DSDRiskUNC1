@@ -16,14 +16,14 @@ import org.json.simple.parser.ParseException;
  */
 public class LogInGUI extends javax.swing.JFrame {
 
-    public User user;
+    String username;
 
     /**
      * Creates new form LogInGUI
      */
-    public LogInGUI(User user) {
+    public LogInGUI(String username) {
         initComponents();
-        this.user = user;
+        this.username = username;
         this.setVisible(true);
         this.setResizable(false);
         this.setLocationRelativeTo(null);
@@ -42,7 +42,7 @@ public class LogInGUI extends javax.swing.JFrame {
         title2Label = new javax.swing.JLabel();
         usernameLabel = new javax.swing.JLabel();
         passwordLabel = new javax.swing.JLabel();
-        username = new javax.swing.JTextField();
+        usernameTextField = new javax.swing.JTextField();
         enter = new javax.swing.JButton();
         goBack = new javax.swing.JButton();
         password = new javax.swing.JPasswordField();
@@ -70,7 +70,7 @@ public class LogInGUI extends javax.swing.JFrame {
 
         passwordLabel.setText("Password");
         getContentPane().add(passwordLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(66, 160, -1, -1));
-        getContentPane().add(username, new org.netbeans.lib.awtextra.AbsoluteConstraints(132, 116, 181, -1));
+        getContentPane().add(usernameTextField, new org.netbeans.lib.awtextra.AbsoluteConstraints(132, 116, 181, -1));
 
         enter.setText("Enter");
         enter.addActionListener(new java.awt.event.ActionListener() {
@@ -99,11 +99,11 @@ public class LogInGUI extends javax.swing.JFrame {
     private void enterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_enterActionPerformed
 
         try {
-            JSONArray array = AccountManager.loginAccount(username.getText(), String.valueOf(password.getPassword()));
+            JSONArray array = AccountManager.loginAccount(usernameTextField.getText(), String.valueOf(password.getPassword()));
             boolean status = (boolean)(((JSONObject) (array.get(0))).get("status"));
             String message = (String)(((JSONObject) (array.get(0))).get("message"));
             if (status){
-                new SessionGUI(username.getText()).setVisible(true);
+                new SessionGUI(usernameTextField.getText()).setVisible(true);
                 this.setVisible(false);
             }else{
                 JOptionPane.showMessageDialog(this, message, "Message", JOptionPane.INFORMATION_MESSAGE);
@@ -129,7 +129,7 @@ public class LogInGUI extends javax.swing.JFrame {
     private javax.swing.JLabel passwordLabel;
     private javax.swing.JLabel title1Label;
     private javax.swing.JLabel title2Label;
-    private javax.swing.JTextField username;
     private javax.swing.JLabel usernameLabel;
+    private javax.swing.JTextField usernameTextField;
     // End of variables declaration//GEN-END:variables
 }

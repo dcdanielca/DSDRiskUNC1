@@ -8,12 +8,12 @@ import javax.swing.JOptionPane;
  * @author GROUP 1 UNC
  */
 public class DeleteContactGUI extends javax.swing.JFrame {
-    User user;
+    String username;
     /**
      * Creates new form DeleteContactGUI
      */
-    public DeleteContactGUI(User user) {
-        this.user=user;
+    public DeleteContactGUI(String username) {
+        this.username = username;
         initComponents();
         this.setVisible(true);
         this.setResizable(false);

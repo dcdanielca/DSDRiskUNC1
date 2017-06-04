@@ -15,8 +15,10 @@ import org.json.simple.parser.ParseException;
  * @author GROUP 1 UNC
  */
 public class CreateAccountGUI extends javax.swing.JFrame {
-
-    public CreateAccountGUI(User user) {
+    String usern;
+    
+    public CreateAccountGUI(String username) {
+        this.usern = usern;
         initComponents();
         this.setVisible(true);
         this.setResizable(false);
