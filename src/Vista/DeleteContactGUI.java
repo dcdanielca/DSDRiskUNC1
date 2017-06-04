@@ -1,23 +1,37 @@
 package Vista;
 
-import Model.User;
+import java.util.ArrayList;
+import java.util.Iterator;
+import javax.swing.table.DefaultTableModel;
+import org.json.simple.*;
+import org.json.simple.parser.ParseException;
+import AppAccount.ContactManager;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.ParseException;
 
 /**
  *
  * @author GROUP 1 UNC
  */
 public class DeleteContactGUI extends javax.swing.JFrame {
+
     String username;
+
     /**
      * Creates new form DeleteContactGUI
      */
-    public DeleteContactGUI(String username) {
+    public DeleteContactGUI(String username) throws ParseException {
         this.username = username;
         initComponents();
         this.setVisible(true);
         this.setResizable(false);
         this.setLocationRelativeTo(null);
+
+        this.changeContactList(this.listUserContacts());
     }
 
     /**
@@ -80,10 +94,21 @@ public class DeleteContactGUI extends javax.swing.JFrame {
                 {null}
             },
             new String [] {
-                "Conctact username"
+                "Contact username"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         jScrollPane2.setViewportView(jTable1);
+        if (jTable1.getColumnModel().getColumnCount() > 0) {
+            jTable1.getColumnModel().getColumn(0).setResizable(false);
+        }
 
         getContentPane().add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 200, 160, 90));
 
@@ -98,18 +123,74 @@ public class DeleteContactGUI extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void deleteContactActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteContactActionPerformed
-       /** if(user.account.contactList.get(0).removeContact()){
-            JOptionPane.showMessageDialog(this, "Se ha eliminado con exito");
-            this.setVisible(false);
+
+        int row = jTable1.getSelectedRow();
+
+        if (row >= 0) {
+
+            try {
+                JSONArray array = ContactManager.deleteContact(username, ((String) jTable1.getValueAt(row, 0)));
+                String message = (String) (((JSONObject) (array.get(0))).get("message"));
+                JOptionPane.showOptionDialog(null, message, "Message",
+                        JOptionPane.INFORMATION_MESSAGE, JOptionPane.INFORMATION_MESSAGE,
+                        null, new Object[]{"Accept"}, null);
+                this.changeContactList(this.listUserContacts());
+
+            } catch (ParseException ex) {
+                Logger.getLogger(DeleteContactGUI.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } else {
+            JOptionPane.showOptionDialog(null, "Select a contact from the list", "Message",
+                    JOptionPane.INFORMATION_MESSAGE, JOptionPane.INFORMATION_MESSAGE,
+                    null, new Object[]{"Accept"}, null);
         }
-        **/
-       this.setVisible(false);
     }//GEN-LAST:event_deleteContactActionPerformed
 
     private void goBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_goBackActionPerformed
-        this.setVisible(false);
+
     }//GEN-LAST:event_goBackActionPerformed
 
+    private ArrayList<String> listUserContacts() throws ParseException {
+
+        JSONArray array = ContactManager.listUserContacts(username);
+        boolean status = (boolean) (((JSONObject) (array.get(0))).get("status"));
+        String message = (String) (((JSONObject) (array.get(0))).get("message"));
+
+        ArrayList<String> contactsUsername = new ArrayList<>();
+
+        if (status) {
+
+            int contactsLength = ((JSONArray) (((JSONObject) (array.get(0))).get("contacts"))).size();
+
+            for (int i = 0; i < contactsLength; i++) {
+                contactsUsername.add(((String) ((JSONObject) (((JSONArray) (((JSONObject) (array.get(0))).get("contacts"))).get(i))).get("username")));
+            }
+        } else {
+            JOptionPane.showOptionDialog(null, message, "Message",
+                    JOptionPane.INFORMATION_MESSAGE, JOptionPane.INFORMATION_MESSAGE,
+                    null, new Object[]{"Accept"}, null);
+        }
+        return contactsUsername;
+    }
+
+    private void changeContactList(ArrayList<String> contactList) {
+
+        Object[] columnNames = {"Conctact username"};
+        Object[][] data = new Object[0][1];
+
+        DefaultTableModel model = new DefaultTableModel(data, columnNames);
+
+        Iterator<String> it = contactList.iterator();
+
+        while (it.hasNext()) {
+            Object newData[] = new Object[9];
+            newData[0] = it.next();
+            model.addRow(newData);
+        }
+
+        jTable1.setModel(model);
+
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel aboutLabel;
@@ -122,4 +203,5 @@ public class DeleteContactGUI extends javax.swing.JFrame {
     private javax.swing.JLabel title1Label;
     private javax.swing.JLabel title2Label;
     // End of variables declaration//GEN-END:variables
+
 }

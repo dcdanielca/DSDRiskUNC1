@@ -1,14 +1,21 @@
 package Vista;
 
-import Model.Player;
-import Model.User;
+import AppGameSetup.SessionManager;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.ParseException;
 
 /**
  *
  * @author GROUP 1 UNC
  */
 public class InitialSetupGUI extends javax.swing.JFrame {
+
     String username;
+
     /**
      * Creates new form InitialSetupGUI
      */
@@ -105,8 +112,21 @@ public class InitialSetupGUI extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void leaveSessionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_leaveSessionActionPerformed
-        this.setVisible(false);
-        new SessionGUI(username).setVisible(true);
+        try {
+            JSONArray array = SessionManager.leaveSession(username);
+            boolean status = (boolean) (((JSONObject) (array.get(0))).get("status"));
+            String message = (String) (((JSONObject) (array.get(0))).get("message"));
+            if (status) {
+                this.setVisible(false);
+                new SessionGUI(username).setVisible(true);
+            } else {
+                JOptionPane.showOptionDialog(null, message, "Message",
+                        JOptionPane.INFORMATION_MESSAGE, JOptionPane.INFORMATION_MESSAGE,
+                        null, new Object[]{"Accept"}, null);
+            }
+        } catch (ParseException ex) {
+            Logger.getLogger(LogInGUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_leaveSessionActionPerformed
 
 

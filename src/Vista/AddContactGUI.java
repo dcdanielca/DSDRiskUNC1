@@ -1,13 +1,21 @@
 package Vista;
 
-import Model.User;
+import AppAccount.ContactManager;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.ParseException;
 
 /**
  *
  * @author GROUP 1 UNC
  */
 public class AddContactGUI extends javax.swing.JFrame {
+
     String username;
+
     /**
      * Creates new form AddContactGUI
      */
@@ -88,7 +96,15 @@ public class AddContactGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_goBackActionPerformed
 
     private void addActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addActionPerformed
-        this.setVisible(false);
+        try {
+            JSONArray array = ContactManager.addContact(username, usernameTextField.getText());
+            String message = (String) (((JSONObject) (array.get(0))).get("message"));
+            JOptionPane.showOptionDialog(null, message, "Message",
+                    JOptionPane.INFORMATION_MESSAGE, JOptionPane.INFORMATION_MESSAGE,
+                    null, new Object[]{"Accept"}, null);
+        } catch (ParseException ex) {
+            Logger.getLogger(LogInGUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_addActionPerformed
 
     private void usernameTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_usernameTextFieldActionPerformed

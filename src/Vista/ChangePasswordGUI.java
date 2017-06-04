@@ -1,7 +1,14 @@
 package Vista;
 
+import AppAccount.AccountManager;
+import AppGameSetup.SessionManager;
 import Model.User;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.ParseException;
 
 /**
  *
@@ -36,7 +43,7 @@ public class ChangePasswordGUI extends javax.swing.JFrame {
         oldPasswordLabel = new javax.swing.JLabel();
         newPasswordLabel = new javax.swing.JLabel();
         confirmNewPasswordLabel = new javax.swing.JLabel();
-        oldPassword = new javax.swing.JPasswordField();
+        actualPassword = new javax.swing.JPasswordField();
         newPassword = new javax.swing.JPasswordField();
         confirmNewPassword = new javax.swing.JPasswordField();
         change = new javax.swing.JButton();
@@ -57,15 +64,18 @@ public class ChangePasswordGUI extends javax.swing.JFrame {
         title1Label.setText("DSDRisk Game");
         getContentPane().add(title1Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 480, 78));
 
-        oldPasswordLabel.setText("Old password");
+        oldPasswordLabel.setForeground(new java.awt.Color(0, 0, 0));
+        oldPasswordLabel.setText("Actual password");
         getContentPane().add(oldPasswordLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 200, -1, -1));
 
-        newPasswordLabel.setText("New Password");
+        newPasswordLabel.setForeground(new java.awt.Color(0, 0, 0));
+        newPasswordLabel.setText("New password");
         getContentPane().add(newPasswordLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 230, -1, -1));
 
+        confirmNewPasswordLabel.setForeground(new java.awt.Color(0, 0, 0));
         confirmNewPasswordLabel.setText("Confirm new password");
         getContentPane().add(confirmNewPasswordLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 260, -1, -1));
-        getContentPane().add(oldPassword, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 200, 143, -1));
+        getContentPane().add(actualPassword, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 200, 143, -1));
         getContentPane().add(newPassword, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 230, 143, -1));
         getContentPane().add(confirmNewPassword, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 260, 143, -1));
 
@@ -102,23 +112,36 @@ public class ChangePasswordGUI extends javax.swing.JFrame {
     private void changeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_changeActionPerformed
         if (newPassword.getText().equals(confirmNewPassword.getText())) {
             if (newPassword.getText().length() >= 6 && newPassword.getText().length() <= 20) {
-                /*if (this.user.account.changePassword(this.user.account.username, oldPassword.getText(), newPassword.getText())) {
-                    JOptionPane.showMessageDialog(this, "Your password has been successfully changed");
-                    this.setVisible(false);
-                } else {
-                    JOptionPane.showMessageDialog(this, "An error has occurred");
-                }*/
+                try {
+                    JSONArray array = AccountManager.changePassword(username, actualPassword.getText(), newPassword.getText());
+                    boolean status = (boolean) (((JSONObject) (array.get(0))).get("status"));
+                    String message = (String) (((JSONObject) (array.get(0))).get("message"));
+                    if (status) {
+                        JOptionPane.showMessageDialog(this, message, "Message", JOptionPane.INFORMATION_MESSAGE);
+                        JOptionPane.showOptionDialog(null, message, "Message",
+                                JOptionPane.INFORMATION_MESSAGE, JOptionPane.INFORMATION_MESSAGE,
+                                null, new Object[]{"Accept"}, null);
+                        this.setVisible(false);
+                    } else {
+                        JOptionPane.showOptionDialog(null, message, "Message",
+                                JOptionPane.INFORMATION_MESSAGE, JOptionPane.INFORMATION_MESSAGE,
+                                null, new Object[]{"Accept"}, null);
+                    }
+                } catch (ParseException ex) {
+                    Logger.getLogger(LogInGUI.class.getName()).log(Level.SEVERE, null, ex);
+                }
             } else {
-                JOptionPane.showMessageDialog(this, "Error: The password must not be less than 6 characters or more than 20 characters");
+                JOptionPane.showMessageDialog(this, "Error: The password must be between 6 and 20 characters");
             }
         } else {
-            JOptionPane.showMessageDialog(this, "Passwords do not match");
+            JOptionPane.showMessageDialog(this, "The password and confirm password are diferent");
         }
     }//GEN-LAST:event_changeActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel aboutLabel;
+    private javax.swing.JPasswordField actualPassword;
     private javax.swing.JButton change;
     private javax.swing.JPasswordField confirmNewPassword;
     private javax.swing.JLabel confirmNewPasswordLabel;
@@ -127,7 +150,6 @@ public class ChangePasswordGUI extends javax.swing.JFrame {
     private javax.swing.JLabel imageBackground;
     private javax.swing.JPasswordField newPassword;
     private javax.swing.JLabel newPasswordLabel;
-    private javax.swing.JPasswordField oldPassword;
     private javax.swing.JLabel oldPasswordLabel;
     private javax.swing.JLabel title1Label;
     // End of variables declaration//GEN-END:variables

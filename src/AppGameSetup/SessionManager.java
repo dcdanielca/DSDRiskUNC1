@@ -24,9 +24,10 @@ public class SessionManager {
         return array;
     }
 
-    public static JSONArray deleteSession(String username) throws ParseException {
+    public static JSONArray deleteSession(String username, int sessionId) throws ParseException {
         JSONObject obj = new org.json.simple.JSONObject();
         obj.put("username", username);
+        obj.put("sessionId", sessionId);
         System.out.println(obj.toJSONString());
 
         String s = (new Scanner(System.in)).nextLine();
@@ -91,6 +92,31 @@ public class SessionManager {
         JSONObject obj = new org.json.simple.JSONObject();
         obj.put("username", contact);
         obj.put("response", resp);
+        System.out.println(obj.toJSONString());
+
+        String s = (new Scanner(System.in)).nextLine();
+        JSONParser parser = new JSONParser();
+        JSONObject response = (JSONObject) parser.parse(s);
+        JSONArray array = (JSONArray) parser.parse("[" + response.toJSONString() + "]");
+        return array;
+    }
+
+    public static JSONArray listSession() throws ParseException {
+
+        JSONObject obj = new org.json.simple.JSONObject();
+        System.out.println(obj.toJSONString());
+
+        String s = (new Scanner(System.in)).nextLine();
+        JSONParser parser = new JSONParser();
+        JSONObject response = (JSONObject) parser.parse(s);
+        JSONArray array = (JSONArray) parser.parse("[" + response.toJSONString() + "]");
+        return array;
+    }
+
+    public static JSONArray takeOutPlayer(String username, int idSession) throws ParseException {
+        JSONObject obj = new org.json.simple.JSONObject();
+        obj.put("username", username);
+        obj.put("idSession", idSession);
         System.out.println(obj.toJSONString());
 
         String s = (new Scanner(System.in)).nextLine();

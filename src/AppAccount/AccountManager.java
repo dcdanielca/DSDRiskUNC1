@@ -48,5 +48,33 @@ public class AccountManager {
         JSONArray array = (JSONArray) parser.parse("[" + response.toJSONString() + "]");
         return array;
     }
+    
+        public static JSONArray logoutAccount(String username) throws ParseException {
+
+        JSONObject obj = new org.json.simple.JSONObject();
+        obj.put("username", username);
+
+        System.out.println(obj.toJSONString());
+        String s = (new Scanner(System.in)).nextLine();
+        JSONParser parser = new JSONParser();
+        JSONObject response = (JSONObject) parser.parse(s);
+        JSONArray array = (JSONArray) parser.parse("[" + response.toJSONString() + "]");
+        return array;
+    }
+    
+        public static JSONArray changePassword(String username, String actualPassword, String newPassword) throws ParseException {
+
+        JSONObject obj = new org.json.simple.JSONObject();
+        obj.put("username", username);
+        obj.put("actualPassword", actualPassword);
+        obj.put("newPassword", actualPassword);
+
+        System.out.println(obj.toJSONString());
+        String s = (new Scanner(System.in)).nextLine();
+        JSONParser parser = new JSONParser();
+        JSONObject response = (JSONObject) parser.parse(s);
+        JSONArray array = (JSONArray) parser.parse("[" + response.toJSONString() + "]");
+        return array;
+    }
 
 }

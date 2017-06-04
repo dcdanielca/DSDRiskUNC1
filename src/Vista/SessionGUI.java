@@ -1,10 +1,13 @@
 package Vista;
 
+import AppAccount.AccountManager;
 import AppGameSetup.SessionManager;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
@@ -20,13 +23,15 @@ public class SessionGUI extends javax.swing.JFrame {
     ButtonGroup bg = new ButtonGroup();
     String username;
 
-    public SessionGUI(String username) {
+    public SessionGUI(String username) throws ParseException {
         initComponents();
         this.username = username;
         title2Label.setText("Welcome " + username);
         this.setVisible(true);
         this.setResizable(false);
         this.setLocationRelativeTo(null);
+        String[][] ej = new String[2][2];
+        //this.changeSessionList(this.listSession());
     }
 
     /**
@@ -43,7 +48,8 @@ public class SessionGUI extends javax.swing.JFrame {
         title3Label = new javax.swing.JLabel();
         title2Label = new javax.swing.JLabel();
         aboutLabel = new javax.swing.JLabel();
-        removeContact = new javax.swing.JButton();
+        reload = new javax.swing.JButton();
+        deleteContact = new javax.swing.JButton();
         logOut = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         availableSession = new javax.swing.JScrollPane();
@@ -83,13 +89,21 @@ public class SessionGUI extends javax.swing.JFrame {
         aboutLabel.setText("About this game");
         getContentPane().add(aboutLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 470, -1, -1));
 
-        removeContact.setText("Remove contact");
-        removeContact.addActionListener(new java.awt.event.ActionListener() {
+        reload.setText("Reload");
+        reload.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                removeContactActionPerformed(evt);
+                reloadActionPerformed(evt);
             }
         });
-        getContentPane().add(removeContact, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 330, 160, 30));
+        getContentPane().add(reload, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 190, -1, -1));
+
+        deleteContact.setText("Delete contact");
+        deleteContact.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteContactActionPerformed(evt);
+            }
+        });
+        getContentPane().add(deleteContact, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 330, 160, 30));
 
         logOut.setText("Log out");
         logOut.addActionListener(new java.awt.event.ActionListener() {
@@ -137,17 +151,15 @@ public class SessionGUI extends javax.swing.JFrame {
         jScrollPane1.setViewportView(jTable1);
         jTable1.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         if (jTable1.getColumnModel().getColumnCount() > 0) {
-            jTable1.getColumnModel().getColumn(0).setMinWidth(120);
-            jTable1.getColumnModel().getColumn(0).setMaxWidth(150);
-            jTable1.getColumnModel().getColumn(1).setMinWidth(120);
-            jTable1.getColumnModel().getColumn(1).setMaxWidth(150);
+            jTable1.getColumnModel().getColumn(0).setResizable(false);
+            jTable1.getColumnModel().getColumn(1).setResizable(false);
         }
 
         jPanel2.add(jScrollPane1, java.awt.BorderLayout.CENTER);
 
         availableSession.setViewportView(jPanel2);
 
-        getContentPane().add(availableSession, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 230, 313, 160));
+        getContentPane().add(availableSession, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 230, 390, 160));
 
         makeRequest.setText("Make request");
         getContentPane().add(makeRequest, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 400, 160, 40));
@@ -183,10 +195,21 @@ public class SessionGUI extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void logOutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logOutActionPerformed
-
-        this.setVisible(false);
-        this.username = null;
-        new LogInGUI(this.username).setVisible(true);
+        try {
+            JSONArray array = AccountManager.logoutAccount(this.username);
+            boolean status = (boolean) (((JSONObject) (array.get(0))).get("status"));
+            String message = (String) (((JSONObject) (array.get(0))).get("message"));
+            if (status) {
+                this.setVisible(false);
+                new LogInGUI(this.username).setVisible(true);
+            } else {
+                JOptionPane.showOptionDialog(null, message, "Message",
+                        JOptionPane.INFORMATION_MESSAGE, JOptionPane.INFORMATION_MESSAGE,
+                        null, new Object[]{"Accept"}, null);
+            }
+        } catch (ParseException ex) {
+            Logger.getLogger(LogInGUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_logOutActionPerformed
 
     private void createSessionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createSessionActionPerformed
@@ -194,11 +217,14 @@ public class SessionGUI extends javax.swing.JFrame {
             JSONArray array = SessionManager.createSession(this.username);
             boolean status = (boolean) (((JSONObject) (array.get(0))).get("status"));
             String message = (String) (((JSONObject) (array.get(0))).get("message"));
+            int sessionId = Integer.parseInt(String.valueOf(((JSONObject) (array.get(0))).get("sessionId")));
             if (status) {
                 this.setVisible(false);
-                new InitialSetupHostGUI(this.username).setVisible(true);
+                new InitialSetupHostGUI(this.username, sessionId).setVisible(true);
             } else {
-                JOptionPane.showMessageDialog(this, message, "Message", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showOptionDialog(null, message, "Message",
+                        JOptionPane.INFORMATION_MESSAGE, JOptionPane.INFORMATION_MESSAGE,
+                        null, new Object[]{"Accept"}, null);
             }
         } catch (ParseException ex) {
             Logger.getLogger(LogInGUI.class.getName()).log(Level.SEVERE, null, ex);
@@ -209,14 +235,68 @@ public class SessionGUI extends javax.swing.JFrame {
         new AddContactGUI(this.username).setVisible(true);
     }//GEN-LAST:event_addContactActionPerformed
 
-    private void removeContactActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeContactActionPerformed
-        new DeleteContactGUI(this.username).setVisible(true);
-    }//GEN-LAST:event_removeContactActionPerformed
+    private void deleteContactActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteContactActionPerformed
+        try {
+            new DeleteContactGUI(this.username).setVisible(true);
+        } catch (ParseException ex) {
+            Logger.getLogger(SessionGUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_deleteContactActionPerformed
 
     private void changePasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_changePasswordActionPerformed
         new ChangePasswordGUI(this.username).setVisible(true);
     }//GEN-LAST:event_changePasswordActionPerformed
 
+    private void reloadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reloadActionPerformed
+
+        try {
+            this.changeSessionList(this.listSession());
+        } catch (ParseException ex) {
+            Logger.getLogger(SessionGUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_reloadActionPerformed
+
+    private String[][] listSession() throws ParseException {
+
+        JSONArray array = SessionManager.listSession();
+        boolean status = (boolean) (((JSONObject) (array.get(0))).get("status"));
+
+        if (status) {
+            int sessionsLength = ((JSONArray) (((JSONObject) (array.get(0))).get("sessions"))).size();
+            String[][] contactList = new String[sessionsLength][2];
+            for (int i = 0; i < sessionsLength; i++) {
+                contactList[i][1] = (String) ((JSONObject) (((JSONArray) (((JSONObject) (array.get(0))).get("sessions"))).get(i))).get("hostUsername");
+                contactList[i][0] = String.valueOf(((JSONObject) (((JSONArray) (((JSONObject) (array.get(0))).get("sessions"))).get(i))).get("id"));
+            }
+            return contactList;
+        } else {
+            String message = (String) (((JSONObject) (array.get(0))).get("message"));
+            JOptionPane.showOptionDialog(null, message, "Message",
+                    JOptionPane.INFORMATION_MESSAGE, JOptionPane.INFORMATION_MESSAGE,
+                    null, new Object[]{"Accept"}, null);
+        }
+        return null;
+    }
+
+    private void changeSessionList(String[][] sessions) {
+
+        if (sessions != null) {
+            int rows = 2;
+            int columns = sessions[0].length;
+            Object[] columnNames = {"Session ID", "Username"};
+            Object[][] data = new Object[0][2];
+            DefaultTableModel model = new DefaultTableModel(data, columnNames);
+
+            for (int i = 0; i < rows; i++) {
+                Object newData[] = new Object[2];
+                for (int j = 0; j < columns; j++) {
+                    newData[j] = sessions[i][j];
+                }
+                model.addRow(newData);
+            }
+            jTable1.setModel(model);
+        }
+    }
     /**
      * @param args the command line arguments
      */
@@ -226,6 +306,7 @@ public class SessionGUI extends javax.swing.JFrame {
     private javax.swing.JScrollPane availableSession;
     private javax.swing.JButton changePassword;
     private javax.swing.JButton createSession;
+    private javax.swing.JButton deleteContact;
     private javax.swing.JLabel image1;
     private javax.swing.JLabel imageBackground;
     private javax.swing.JPanel jPanel1;
@@ -236,7 +317,7 @@ public class SessionGUI extends javax.swing.JFrame {
     private javax.swing.JTable jTable1;
     private javax.swing.JButton logOut;
     private javax.swing.JButton makeRequest;
-    private javax.swing.JButton removeContact;
+    private javax.swing.JButton reload;
     private javax.swing.JLabel title1Label;
     private javax.swing.JLabel title2Label;
     private javax.swing.JLabel title3Label;

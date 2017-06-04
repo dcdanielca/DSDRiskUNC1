@@ -15,8 +15,9 @@ import org.json.simple.parser.ParseException;
  * @author GROUP 1 UNC
  */
 public class CreateAccountGUI extends javax.swing.JFrame {
+
     String usern;
-    
+
     public CreateAccountGUI(String username) {
         this.usern = usern;
         initComponents();
@@ -117,11 +118,22 @@ public class CreateAccountGUI extends javax.swing.JFrame {
     private void confirmActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_confirmActionPerformed
 
         try {
-            String message = AccountManager.createAccount(username.getText(), String.valueOf(password.getPassword()), String.valueOf(confirmPassword.getPassword()), email.getText());
-            JOptionPane.showMessageDialog(this, message, "Message", JOptionPane.INFORMATION_MESSAGE);
+            if (password.getText().length() >= 6 && password.getText().length() <= 20) {
+                String message = AccountManager.createAccount(username.getText(), 
+                        String.valueOf(password.getPassword()), 
+                        String.valueOf(confirmPassword.getPassword()), 
+                        email.getText());
+                JOptionPane.showOptionDialog(null, message, "Message", 
+                        JOptionPane.INFORMATION_MESSAGE, JOptionPane.INFORMATION_MESSAGE, 
+                        null, new Object[]{"Accept"}, null);
+            } else {
+                JOptionPane.showOptionDialog(null, "Error: The password must be between 6 and 20 characters", 
+                        "Message", JOptionPane.INFORMATION_MESSAGE, JOptionPane.INFORMATION_MESSAGE, null,
+                        new Object[]{"Accept"}, null);
+            }
         } catch (ParseException ex) {
             Logger.getLogger(CreateAccountGUI.class.getName()).log(Level.SEVERE, null, ex);
-        }       
+        }
     }//GEN-LAST:event_confirmActionPerformed
 
     private void goBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_goBackActionPerformed

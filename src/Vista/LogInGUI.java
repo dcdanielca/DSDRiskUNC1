@@ -100,13 +100,15 @@ public class LogInGUI extends javax.swing.JFrame {
 
         try {
             JSONArray array = AccountManager.loginAccount(usernameTextField.getText(), String.valueOf(password.getPassword()));
-            boolean status = (boolean)(((JSONObject) (array.get(0))).get("status"));
-            String message = (String)(((JSONObject) (array.get(0))).get("message"));
-            if (status){
+            boolean status = (boolean) (((JSONObject) (array.get(0))).get("status"));
+            String message = (String) (((JSONObject) (array.get(0))).get("message"));
+            if (status) {
                 new SessionGUI(usernameTextField.getText()).setVisible(true);
                 this.setVisible(false);
-            }else{
-                JOptionPane.showMessageDialog(this, message, "Message", JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                JOptionPane.showOptionDialog(null, message, "Message",
+                        JOptionPane.INFORMATION_MESSAGE, JOptionPane.INFORMATION_MESSAGE,
+                        null, new Object[]{"Accept"}, null);
             }
 
         } catch (ParseException ex) {

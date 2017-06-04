@@ -1,21 +1,29 @@
 package Vista;
 
-import Model.Player;
-import Model.User;
+import AppGameSetup.InitialSetup;
+import AppGameSetup.SessionManager;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.ParseException;
 
 /**
  *
  * @author GROUP 1 UNC
  */
 public class InitialSetupHostGUI extends javax.swing.JFrame {
-    
+
     String username;
+    int sessionId;
+
     /**
      * Creates new form InitialSetupGUI
      */
-    public InitialSetupHostGUI(String username) {
+    public InitialSetupHostGUI(String username, int sessionId) {
         this.username = username;
-       // player = new Player (this.user);
+        this.sessionId = sessionId;
         initComponents();
         this.setVisible(true);
         this.setResizable(false);
@@ -40,6 +48,7 @@ public class InitialSetupHostGUI extends javax.swing.JFrame {
         inviteContact = new javax.swing.JButton();
         startSession = new javax.swing.JButton();
         deleteSession = new javax.swing.JButton();
+        takeOutPlayer = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         aboutLabel = new javax.swing.JLabel();
@@ -83,6 +92,11 @@ public class InitialSetupHostGUI extends javax.swing.JFrame {
         getContentPane().add(inviteContact, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 200, -1, -1));
 
         startSession.setText("Start session");
+        startSession.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                startSessionActionPerformed(evt);
+            }
+        });
         getContentPane().add(startSession, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 200, -1, -1));
 
         deleteSession.setText("Delete session");
@@ -92,6 +106,14 @@ public class InitialSetupHostGUI extends javax.swing.JFrame {
             }
         });
         getContentPane().add(deleteSession, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 200, -1, -1));
+
+        takeOutPlayer.setText("Take out player");
+        takeOutPlayer.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                takeOutPlayerActionPerformed(evt);
+            }
+        });
+        getContentPane().add(takeOutPlayer, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 230, -1, -1));
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -103,8 +125,19 @@ public class InitialSetupHostGUI extends javax.swing.JFrame {
             new String [] {
                 "Username", "Color"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         jScrollPane1.setViewportView(jTable1);
+        if (jTable1.getColumnModel().getColumnCount() > 0) {
+            jTable1.getColumnModel().getColumn(1).setResizable(false);
+        }
 
         getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 80, 170, 140));
 
@@ -123,9 +156,69 @@ public class InitialSetupHostGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_inviteContactActionPerformed
 
     private void deleteSessionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteSessionActionPerformed
-        this.setVisible(false);
-        new SessionGUI(this.username).setVisible(true);
+        try {
+            JSONArray array = SessionManager.deleteSession(username, sessionId);
+            boolean status = (boolean) (((JSONObject) (array.get(0))).get("status"));
+            String message = (String) (((JSONObject) (array.get(0))).get("message"));
+            if (status) {
+                this.setVisible(false);
+                new SessionGUI(this.username).setVisible(true);
+            } else {
+                JOptionPane.showOptionDialog(null, message, "Message",
+                        JOptionPane.INFORMATION_MESSAGE, JOptionPane.INFORMATION_MESSAGE,
+                        null, new Object[]{"Accept"}, null);
+            }
+        } catch (ParseException ex) {
+            Logger.getLogger(LogInGUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_deleteSessionActionPerformed
+
+    private void startSessionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startSessionActionPerformed
+        try {
+            JSONArray array = InitialSetup.startSession(sessionId, (String) typeOfGame.getSelectedItem(), (String) chooseMap.getSelectedItem());
+            boolean status = (boolean) (((JSONObject) (array.get(0))).get("status"));
+            String message = (String) (((JSONObject) (array.get(0))).get("message"));
+            if (status) {
+                JOptionPane.showOptionDialog(null, message, "Message",
+                        JOptionPane.INFORMATION_MESSAGE, JOptionPane.INFORMATION_MESSAGE,
+                        null, new Object[]{"Accept"}, null);
+                this.setVisible(false);
+            } else {
+                JOptionPane.showOptionDialog(null, message, "Message",
+                        JOptionPane.INFORMATION_MESSAGE, JOptionPane.INFORMATION_MESSAGE,
+                        null, new Object[]{"Accept"}, null);
+            }
+        } catch (ParseException ex) {
+            Logger.getLogger(LogInGUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_startSessionActionPerformed
+
+    private void takeOutPlayerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_takeOutPlayerActionPerformed
+        int row = jTable1.getSelectedRow();
+        if (row >= 0) {
+            try {
+                JSONArray array = SessionManager.takeOutPlayer((String) jTable1.getValueAt(row, 0), sessionId);
+                boolean status = (boolean) (((JSONObject) (array.get(0))).get("status"));
+                String message = (String) (((JSONObject) (array.get(0))).get("message"));
+                if (status) {
+                    JOptionPane.showOptionDialog(null, message, "Message",
+                            JOptionPane.INFORMATION_MESSAGE, JOptionPane.INFORMATION_MESSAGE,
+                            null, new Object[]{"Accept"}, null);
+                    this.setVisible(false);
+                } else {
+                    JOptionPane.showOptionDialog(null, message, "Message",
+                            JOptionPane.INFORMATION_MESSAGE, JOptionPane.INFORMATION_MESSAGE,
+                            null, new Object[]{"Accept"}, null);
+                }
+            } catch (ParseException ex) {
+                Logger.getLogger(LogInGUI.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } else {
+            JOptionPane.showOptionDialog(null, "Select a contact from the list", "Message",
+                    JOptionPane.INFORMATION_MESSAGE, JOptionPane.INFORMATION_MESSAGE,
+                    null, new Object[]{"Accept"}, null);
+        }
+    }//GEN-LAST:event_takeOutPlayerActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -138,6 +231,7 @@ public class InitialSetupHostGUI extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
     private javax.swing.JButton startSession;
+    private javax.swing.JButton takeOutPlayer;
     private javax.swing.JLabel title1Label;
     private javax.swing.JLabel title2Label;
     private javax.swing.JComboBox<String> typeOfGame;
