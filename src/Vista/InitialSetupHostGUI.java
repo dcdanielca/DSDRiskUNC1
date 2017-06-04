@@ -77,8 +77,13 @@ public class InitialSetupHostGUI extends javax.swing.JFrame {
         chooseMapLabel.setText("Choose map");
         getContentPane().add(chooseMapLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(248, 116, 90, -1));
 
-        typeOfGame.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "World domination risk", "Secret Mission Risk", "Capital Risk", "Risk for 2 players" }));
-        getContentPane().add(typeOfGame, new org.netbeans.lib.awtextra.AbsoluteConstraints(373, 144, 130, -1));
+        typeOfGame.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "WORLD_DOMINATION_RISK", "RISK_FOR_TWO_PLAYERS", "SECRET_MISSION_RISK", "CAPITAL_RISK" }));
+        typeOfGame.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                typeOfGameActionPerformed(evt);
+            }
+        });
+        getContentPane().add(typeOfGame, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 150, 180, -1));
 
         typeOfGameLabel.setText("Type of game");
         getContentPane().add(typeOfGameLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(248, 147, 90, -1));
@@ -219,6 +224,10 @@ public class InitialSetupHostGUI extends javax.swing.JFrame {
                     null, new Object[]{"Accept"}, null);
         }
     }//GEN-LAST:event_takeOutPlayerActionPerformed
+
+    private void typeOfGameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_typeOfGameActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_typeOfGameActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

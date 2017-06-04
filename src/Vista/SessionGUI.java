@@ -3,7 +3,6 @@ package Vista;
 import AppAccount.AccountManager;
 import AppGameSetup.SessionManager;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.*;
@@ -30,8 +29,7 @@ public class SessionGUI extends javax.swing.JFrame {
         this.setVisible(true);
         this.setResizable(false);
         this.setLocationRelativeTo(null);
-        String[][] ej = new String[2][2];
-        //this.changeSessionList(this.listSession());
+        this.changeSessionList(this.listSession());
     }
 
     /**
@@ -263,12 +261,19 @@ public class SessionGUI extends javax.swing.JFrame {
 
         if (status) {
             int sessionsLength = ((JSONArray) (((JSONObject) (array.get(0))).get("sessions"))).size();
-            String[][] contactList = new String[sessionsLength][2];
+            String[][] sessionList = new String[sessionsLength][2];
             for (int i = 0; i < sessionsLength; i++) {
-                contactList[i][1] = (String) ((JSONObject) (((JSONArray) (((JSONObject) (array.get(0))).get("sessions"))).get(i))).get("hostUsername");
-                contactList[i][0] = String.valueOf(((JSONObject) (((JSONArray) (((JSONObject) (array.get(0))).get("sessions"))).get(i))).get("id"));
+                int playersLength = ((JSONArray) ((JSONObject) (((JSONArray) (((JSONObject) (array.get(0))).get("sessions"))).get(i))).get("players")).size();
+                for (int j = 0; j < playersLength; j++) {
+                    String type = (String) (((JSONObject) (((JSONArray) ((JSONObject) (((JSONArray) (((JSONObject) (array.get(0))).get("sessions"))).get(i))).get("players")).get(j))).get("type"));
+                    if (type.equals("HOST")) {
+                        sessionList[i][1] = String.valueOf(((JSONObject) (((JSONArray) ((JSONObject) (((JSONArray) (((JSONObject) (array.get(0))).get("sessions"))).get(i))).get("players")).get(j))).get("username"));
+                    }
+
+                }
+                sessionList[i][0] = String.valueOf(((JSONObject) (((JSONArray) (((JSONObject) (array.get(0))).get("sessions"))).get(i))).get("id"));
             }
-            return contactList;
+            return sessionList;
         } else {
             String message = (String) (((JSONObject) (array.get(0))).get("message"));
             JOptionPane.showOptionDialog(null, message, "Message",

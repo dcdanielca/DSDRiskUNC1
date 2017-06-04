@@ -96,19 +96,22 @@
       <Properties>
         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
           <StringArray count="4">
-            <StringItem index="0" value="World domination risk"/>
-            <StringItem index="1" value="Secret Mission Risk"/>
-            <StringItem index="2" value="Capital Risk"/>
-            <StringItem index="3" value="Risk for 2 players"/>
+            <StringItem index="0" value="WORLD_DOMINATION_RISK"/>
+            <StringItem index="1" value="RISK_FOR_TWO_PLAYERS"/>
+            <StringItem index="2" value="SECRET_MISSION_RISK"/>
+            <StringItem index="3" value="CAPITAL_RISK"/>
           </StringArray>
         </Property>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="typeOfGameActionPerformed"/>
+      </Events>
       <AuxValues>
         <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
       </AuxValues>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-          <AbsoluteConstraints x="373" y="144" width="130" height="-1"/>
+          <AbsoluteConstraints x="350" y="150" width="180" height="-1"/>
         </Constraint>
       </Constraints>
     </Component>

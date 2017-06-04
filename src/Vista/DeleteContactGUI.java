@@ -30,7 +30,6 @@ public class DeleteContactGUI extends javax.swing.JFrame {
         this.setVisible(true);
         this.setResizable(false);
         this.setLocationRelativeTo(null);
-
         this.changeContactList(this.listUserContacts());
     }
 
@@ -154,18 +153,15 @@ public class DeleteContactGUI extends javax.swing.JFrame {
 
         JSONArray array = ContactManager.listUserContacts(username);
         boolean status = (boolean) (((JSONObject) (array.get(0))).get("status"));
-        String message = (String) (((JSONObject) (array.get(0))).get("message"));
-
         ArrayList<String> contactsUsername = new ArrayList<>();
 
         if (status) {
-
             int contactsLength = ((JSONArray) (((JSONObject) (array.get(0))).get("contacts"))).size();
-
             for (int i = 0; i < contactsLength; i++) {
                 contactsUsername.add(((String) ((JSONObject) (((JSONArray) (((JSONObject) (array.get(0))).get("contacts"))).get(i))).get("username")));
             }
         } else {
+            String message = (String) (((JSONObject) (array.get(0))).get("message"));
             JOptionPane.showOptionDialog(null, message, "Message",
                     JOptionPane.INFORMATION_MESSAGE, JOptionPane.INFORMATION_MESSAGE,
                     null, new Object[]{"Accept"}, null);
